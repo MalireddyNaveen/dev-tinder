@@ -1,15 +1,25 @@
 const express = require("express");
+const {adminAuth,userAuth} =require("./middlewares/adminAuth")
 
-const app =express();
+const app=express();
 
-app.use("/test",(req,res)=>{
-    res.send("Hello Node!")
-});
+//middler ware for admin auth
+app.use("/admin",adminAuth)
+ 
 
-app.use("/get",(req,res)=>{
-    res.send("Hello!!! !! Naveen")
+app.get("/user/data",userAuth,(req,res)=>{
+    res.send("Get User data")
+})
+
+app.get("/admin/getAllData",(req,res)=>{
+    res.send("get all admin data");
+       
+})
+
+app.delete("/admin/deleteData", (req,res)=>{
+    res.send("Delete admin data");
 })
 
 app.listen(7777,()=>{
-    console.log("server is running on port 7777");
+    console.log("Server is running on 7777 port")
 })
