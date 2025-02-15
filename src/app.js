@@ -3,16 +3,21 @@ const express = require("express");
 const connectDb=require("./config/database");
 const User =require("./model/user")
 const app=express();
-
+//here comes a middele to conver json data to js object 
+//express gives us that middle ware express.json()
+//actually req.body is in json so when we console.log(req.body) it gives undefine becuse of it wont under stand json format to make it under stand we use middleware that is express.josn()  it was given by express.
+app.use(express.json())
 app.post("/signup",async (req,res)=>{
-    const userObj={
-        firstName:"Naveen",
-        lastName:"Malireddy",
-        emailID:"malireddy@gmail.com",
-        password:"1234567890"
-    }
 
-    const newUser =new User(userObj) ;
+    console.log(req.body)
+    // const userObj={
+    //     firstName:"Naveen",
+    //     lastName:"Malireddy",
+    //     emailID:"malireddy@gmail.com",
+    //     password:"1234567890"
+    // }
+
+    const newUser =new User(req.body) ;
     //use try catch for error handling
     try{
         await  newUser.save() //it returns a promise so handle with async await
