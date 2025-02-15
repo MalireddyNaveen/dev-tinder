@@ -1,23 +1,16 @@
 const express = require("express");
-const {adminAuth,userAuth} =require("./middlewares/adminAuth")
-
 const app=express();
 
-//middler ware for admin auth
-app.use("/admin",adminAuth)
- 
+app.get("/getUserData",(req,res)=>{
 
-app.get("/user/data",userAuth,(req,res)=>{
-    res.send("Get User data")
+    // try to handle error is in try catch for gracefull go for use
+    throw new Error("error");
+    res.send("get ueserdata");
 })
-
-app.get("/admin/getAllData",(req,res)=>{
-    res.send("get all admin data");
-       
-})
-
-app.delete("/admin/deleteData", (req,res)=>{
-    res.send("Delete admin data");
+app.use("/",(err,req,res,next)=>{
+    if(err){
+        res.status(500).send("Something wrong")
+    }
 })
 
 app.listen(7777,()=>{
