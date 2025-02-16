@@ -29,6 +29,20 @@ app.post("/signup",async (req,res)=>{
   
 })
 
+app.get("/user", async (req,res)=>{
+    const userEmailId=req.body.emailID;
+
+try{
+ const user= await  User.find({emailID:userEmailId})
+  res.send(user)
+}
+catch(error){
+res.status(500).send("somthing wrong")
+}
+    
+    
+})
+
 
 
 
