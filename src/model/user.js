@@ -10,6 +10,9 @@ const userSchema=new Schema({
     age:Number,
     gender:String,
     createDate:[{type:Date, default:Date.now}]
+},
+{
+    timestamps:true
 })
 
 // const UserModel = mongoose.model("User", userSchema);

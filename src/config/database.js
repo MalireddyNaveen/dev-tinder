@@ -3,6 +3,7 @@ const mongoose = require("mongoose");
 const connectDb=async ()=>{
     await mongoose.connect("mongodb+srv://malireddynaveen:Stjy6empcwD2Yu0L@nodedev.oqneo.mongodb.net/devTinder") //retun a promise show wirte async await
 }
+
 // mongoose.connect("mongodb+srv://malireddynaveen:Stjy6empcwD2Yu0L@nodedev.oqneo.mongodb.net/decTinder") //retun a promise show wirte async await
 
 
