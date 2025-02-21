@@ -1,17 +1,17 @@
 const express = require("express");
 const bcrypt = require("bcrypt");
-const cookieParser= require("cookie-parser");
-const jwt = require("jsonwebtoken");
+const cookieParser = require("cookie-parser");
 //require("./config/database"); //if we write like this first server is created and ten db is hitted its should not happen like that first hit db then run server
 const connectDb = require("./config/database");
 const User = require("./model/user");
 const validateSignUpData = require("./utils/validation");
+const userAuth = require("./middlewares/userAuth");
 const app = express();
 //here comes a middele to conver json data to js object
 //express gives us that middle ware express.json()
 //actually req.body is in json so when we console.log(req.body) it gives undefine becuse of it wont under stand json format to make it under stand we use middleware that is express.josn()  it was given by express.
 app.use(express.json());
-app.use(cookieParser())
+app.use(cookieParser());
 
 //signup api
 app.post("/signup", async (req, res) => {
@@ -35,24 +35,23 @@ app.post("/signup", async (req, res) => {
     res.status(400).send("ERROR" + error.message);
   }
 });
-
 //login api
 
 app.post("/login", async (req, res) => {
   try {
     const { emailID, password } = req.body;
     const user = await User.findOne({ emailID: emailID });
-    console.log(user);
     if (!user) {
       throw new Error("Invalid Credentials");
     }
 
-    const isPasswordValidate = await bcrypt.compare(password, user.password);
+    const isPasswordValidate = user.validatePassword(password);
 
     if (isPasswordValidate) {
-       
-        const token= jwt.sign({_id:user._id},"DEVTinder@5276$09")
-        res.cookie("token",token)
+      const token =await  user.getJwt();
+      const expirationDate = new Date();
+      expirationDate.setDate(expirationDate.getDate() + 7); // Add 7 days
+      res.cookie("token", token, { expires: expirationDate });
       res.send("Login Successful");
     } else {
       throw new Error("Invalid Credentials");
@@ -62,39 +61,23 @@ app.post("/login", async (req, res) => {
   }
 });
 
-app.get("/profile",async(req,res)=>{
-
+app.post("/sendConnectionRequest",userAuth,(req,res)=>{
     try {
-        const cookies=req.cookies
-        const decoded =jwt.verify(cookies.token,"DEVTinder@5276$09")
-        if(!decoded){
-            throw new Error("INvalid token");
-            
-        }
-     
-        const user = await User.findById(decoded._id)
-        if(!user){
-            throw new Error("No user found");
-            
-        }
-        
-        res.send(user)
+      const {firstName}=req.user
+      res.send("coneection request was sent by "+firstName)
     } catch (error) {
-        res.status(400).send("ERROR :"+error.message)
+      res.status(400).send("ERROR : "+ error.message)
     }
-
 })
 
-app.get("/user", async (req, res) => {
-  const userEmailId = req.body.emailID;
-
+app.get("/profile", userAuth, async (req, res) => {
   try {
-    const user = await User.find({ emailID: userEmailId });
-    res.send(user);
+    res.send(req.user);
   } catch (error) {
-    res.status(500).send("somthing wrong");
+    res.status(400).send("ERROR :" + error.message);
   }
 });
+
 
 // create a instance of User
 
