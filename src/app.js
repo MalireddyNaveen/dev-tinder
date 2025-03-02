@@ -8,6 +8,8 @@ const validateSignUpData = require("./utils/validation");
 const userAuth = require("./middlewares/userAuth");
 const authRouter = require("./routes/auth")
 const profileRouter = require("./routes/profile");
+const requestRouter = require("./routes/request");
+const userRouter = require("./routes/user");
 
 const app = express();
 //here comes a middele to conver json data to js object
@@ -18,7 +20,8 @@ app.use(cookieParser());
 
 app.use("/",authRouter);
 app.use("/",profileRouter);
-
+app.use("/",requestRouter);
+app.use("/",userRouter);
 
 app.post("/sendConnectionRequest",userAuth,(req,res)=>{
     try {
@@ -45,4 +48,6 @@ connectDb()
     console.log("DB connection failed");
   });
 
+
+  
 //create instance of a model

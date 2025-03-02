@@ -38,10 +38,12 @@ profileRouter.patch("/profile/edit", userAuth, async (req, res) => {
 profileRouter.patch("/profile/password", userAuth, async (req, res) => {
   try {
     const loggedInUser = req.user;
-    const isOldAndNewPasswordSame = await bcrypt.compare(req.body.password,loggedInUser.password);
-    if(isOldAndNewPasswordSame){
+    const isOldAndNewPasswordSame = await bcrypt.compare(
+      req.body.password,
+      loggedInUser.password
+    );
+    if (isOldAndNewPasswordSame) {
       throw new Error("New password should not be same as previous password");
-      
     }
     if (!validator.isStrongPassword(req.body.password)) {
       throw new Error("Please enter strong password");
