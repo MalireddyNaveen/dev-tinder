@@ -10,11 +10,19 @@ const authRouter = require("./routes/auth")
 const profileRouter = require("./routes/profile");
 const requestRouter = require("./routes/request");
 const userRouter = require("./routes/user");
+const cors=require("cors");
+
 
 const app = express();
 //here comes a middele to conver json data to js object
 //express gives us that middle ware express.json()
 //actually req.body is in json so when we console.log(req.body) it gives undefine becuse of it wont under stand json format to make it under stand we use middleware that is express.josn()  it was given by express.
+app.use(cors(
+  {
+    origin: "http://localhost:5173",
+    credentials: true,
+  }
+))
 app.use(express.json());
 app.use(cookieParser());
 
